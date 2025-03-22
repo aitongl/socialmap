@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+	    {% load static %}
+		<link href="{% static 'socialmap/base.css' %}" rel="stylesheet" type="text/css">
+		{% block scripts %}
+		{% endblock %}
+		<title> {% block title %} Global Stream {% endblock %} </title>
+    </head>
+    <body>
+        <div id="id_header_div">
+			<h1 id="id_side_name">Social Map</h1>
+            {% block header-info %}
+			{% endblock %}
+			<div class="user-info">
+				{% block user-info %}
+				{% endblock %}
+			</div>
+		</div>
+
+        <div id="id_page_name">
+			{% block page-info %}
+			{% endblock %}
+		</div>
+
+	    <div class="search-bar">
+			{% block search-bar %}
+			{% endblock %}
+		</div>
+
+	    {% if message %}
+	        <div class="message">
+	            {{ message }}
+	        </div>
+	    {% endif %}
+
+	    <div class="content">
+		    {% block content %}
+		    {% endblock %}
+		</div>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends "socialmap/base.html" %}
+
+{% block header-info %}
+    <div>
+        <span>
+            <a href="{% url 'register' %}">
+                <button id="id_register_link">Register</button>
+            </a>
+        </span>
+    </div>
+{% endblock %}
+
+{% block page-info %}
+    <h2>Login</h2>
+{% endblock %}
+
+{% block content %}
+    <p>Login to the Social Map:</p>
+    <form method="post" action="{% url 'login' %}">
+        <table>
+            {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <button id="id_login_button" type="submit">Submit</button>
+    </form>
+{% endblock %}

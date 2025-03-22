@@ -1,0 +1,191 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Body Styling */
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    padding: 10px;
+}
+
+/* Header */
+#id_header_div {
+    background-color: #3b5998;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+}
+
+#id_side_name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Navigation Bar */
+#nav-outer {
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+#nav-inner {
+    display: flex;
+    justify-content: space-around;
+}
+
+#nav-inner a {
+    text-decoration: none;
+    color: #3b5998;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+#nav-inner a:hover {
+    text-decoration: underline;
+}
+
+/* Map Styling */
+#map {
+    height: 500px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styling */
+button {
+    padding: 10px 15px;
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #2e4372;
+}
+
+#id_register_link, #id_login_link {
+    font-size: 14px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    padding: 8px 12px;
+}
+
+#id_register_link:hover, #id_login_link:hover {
+    background-color: #45a049;
+}
+
+/* Login/Register Form */
+.content {
+    width: 350px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    padding: 5px;
+}
+
+input[type="text"], input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#id_login_button, #id_register_button {
+    width: 100%;
+    background-color: #3b5998;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+#id_login_button:hover, #id_register_button:hover {
+    background-color: #2e4372;
+}
+
+/* Profile Page */
+.profilePage {
+    width: 80%;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profilePage #form-profile {
+    margin-bottom: 10px;
+}
+
+.profilePage #profile_input {
+    gap: 20px;
+    width: 80%;
+    margin: 30px auto;
+}
+
+.profilePage #profile_input > textarea {
+    width: 80%;
+}
+
+#id_user_picture {
+    display: block;
+    margin: 10px auto;
+    border-radius: 5px;
+}
+
+/* User Follow List */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #3b5998;
+    font-weight: bold;
+}
+
+ul li a:hover {
+    text-decoration: underline;
+}

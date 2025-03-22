@@ -1,0 +1,37 @@
+{% extends "socialmap/nav.html" %}
+{% load static %}
+
+{% block page-info %}
+    <h2>{{ user.first_name }}'s Profile Page</h2>
+{% endblock %}
+ 
+{% block content %}
+    <div class="profilePage">
+        {% if not user.profile.picture %}
+            <img id="id_user_picture" src="{% static 'socialmap/silly-cat.jpeg' %}" width="200" height="100">
+        {% else %}
+            <img src = "{% url 'photo' profile.user.id %}" id = "id_user_picture" width="200" height="100">
+        {% endif %}
+
+        <form enctype="multipart/form-data" id="form-profile" method="post" action="{% url 'profile' %}">
+            <div id="profile_input">
+                {{ form.as_div}}
+                <button type="submit" id="id_update_profile_button">Update Profile</button>
+            </div>
+            {% csrf_token %}
+        </form>
+            
+        <!-- {% if profile.user in request.user.profile.following.all %}
+            <form action="{% url 'unfollow' profile.user.id %}" method="POST">
+                {% csrf_token %}
+                <button id="id_unfollow">Unfollow</button>
+            </form>
+        {% else %}
+            <form action="{% url 'follow' profile.user.id %}" method="POST">
+                {% csrf_token %}
+                <button id="id_follow">Follow</button>
+            </form>
+        {% endif %} -->
+
+    </div>
+{% endblock %}

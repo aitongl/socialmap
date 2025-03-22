@@ -1,0 +1,187 @@
+
+{% block scripts %}
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap" async defer></script>
+  <script>
+    let userMarker;
+    let map;
+
+    function initMap() {
+      drawMap();
+      // Get current user's location
+      const center = { lat: 40.4433, lng: -79.9436 }; // showing CMU
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: center,
+      });
+      getUserLocation();
+    }
+
+    function drawMap() {
+      console.log("drawing map")
+
+      const svgMarkerBlue = {
+        path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+        fillColor: "blue",
+        fillOpacity: 0.6,
+        strokeWeight: 0,
+        rotation: 0,
+        scale: 2,
+        anchor: new google.maps.Point(0, 20),
+      };
+
+      const svgMarkerGreen = {
+        path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+        fillColor: "green",
+        fillOpacity: 0.6,
+        strokeWeight: 0,
+        rotation: 0,
+        scale: 2,
+        anchor: new google.maps.Point(0, 20),
+      };
+
+      const svgMarkerGray = {
+        path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+        fillColor: "gray",
+        fillOpacity: 0.6,
+        strokeWeight: 0,
+        rotation: 0,
+        scale: 2,
+        anchor: new google.maps.Point(0, 20),
+      };
+
+      // Pass profiles as JSON
+      console.log("maping")
+      const profiles = JSON.parse('{{ profiles|safe|escapejs }}');
+      const following = JSON.parse('{{ following|safe|escapejs }}');
+      const user = JSON.parse('{{ user|safe|escapejs }}');
+      let marker;
+      console.log(profiles)
+      profiles.forEach(profile => {
+        if (profile in following) {
+          marker = new google.maps.Marker({
+            position: { lat: parseFloat(profile.latitude), lng: parseFloat(profile.longitude) },
+            map: map,
+            title: profile.user__username,
+            icon: svgMarkerGreen,
+          });
+        } else if (profile.user__username == user) {
+          marker = new google.maps.Marker({
+            position: { lat: parseFloat(profile.latitude), lng: parseFloat(profile.longitude) },
+            map: map,
+            title: profile.user__username,
+            icon: svgMarkerBlue,
+          });
+        } else {
+          marker = new google.maps.Marker({
+            position: { lat: parseFloat(profile.latitude), lng: parseFloat(profile.longitude) },
+            map: map,
+            title: profile.user__username,
+            icon: svgMarkerGray,
+          });
+        }
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div><strong>${profile.user__username}</strong><br>Grade: ${profile.grade} </div>`
+        });
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        });
+      });
+    }
+
+    function getUserLocation() {
+      console.log("getUserLocation")
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            
+            // Center map on user location
+            map.setCenter(userLocation);
+            
+            // Add marker for user's location
+            userMarker = new google.maps.Marker({
+              position: userLocation,
+              map: map,
+              title: "Your Location",
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10,
+                fillColor: "#FF8DA1",
+                fillOpacity: 1,
+                strokeColor: "#FFFFFF",
+                strokeWeight: 2
+              }
+            });
+
+            // Send location to server to update the profile
+            updateUserLocation(userLocation.lat, userLocation.lng);
+          },
+          (error) => {
+            console.error("Error getting user location:", error);
+            alert("Unable to get your location. Please check your browser permissions.");
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+      const profiles = JSON.parse('{{ profiles|safe|escapejs }}');
+
+      drawMap();
+    }
+
+    function updateUserLocation(latitude, longitude) {
+      console.log("updatingUserLocation")
+      // Send an AJAX request to update the user's location in their profile
+      fetch('/update_location/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+          latitude: latitude,
+          longitude: longitude
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Location updated successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error updating location:', error);
+      });
+    }
+    
+    // Helper function to get CSRF token
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+{% endblock %}
+
+{% block header-info %}
+  <a href="{% url 'login' %}">Logout</a>
+  <a href="{% url 'profile' %}">View Profile</a>
+{% endblock %}
+
+{% block content %}
+  <h1>Social Map</h1>
+  <div id="map" style="height: 500px; width: 100%;"></div>
+  <button onclick="getUserLocation()" style="margin-top: 10px; padding: 8px 16px;">Update My Location</button>
+{% endblock %}
+

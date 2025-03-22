@@ -1,0 +1,17 @@
+{% extends "socialmap/base.html" %}
+
+{% block user-info %}
+<div id="nav-outer">
+    <div id="nav-inner">
+        <a id="id_map" href="{% url 'map_view' %}">
+            Map
+        </a>
+        <a id="id_messags" href="{% url 'messages' %}">
+            Messages
+        </a>
+        <a id="id_profile" href="{% url 'profile' %}">
+            Profile
+        </a>
+    </div>
+</div>
+{% endblock %}
